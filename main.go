@@ -63,6 +63,14 @@ func find(c *cli.Context) error {
 		log.Fatal("Please enter file or directory name to search for")
 	}
 
+	if len(c.String(flagIn)) == 0 {
+		log.Fatal("In parameter can't be empty")
+	}
+
+	if _, err := os.Stat(c.String(flagIn)); err != nil {
+		log.Fatal("Failed to find the path defined at in parameter")
+	}
+
 	fmt.Printf("Searching for: %s in: %s\n", c.Args().First(), c.String(flagIn))
 
 	logErr, verbose = c.Bool(flagVerbose), c.Bool(flagVerbose)
