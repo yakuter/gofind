@@ -97,10 +97,20 @@ func find(c *cli.Context) error {
 	}
 
 	elapsed := time.Since(start)
-	fmt.Println("Matches:")
+
 	if len(matches) == 0 {
-		fmt.Println("File or directory not found")
+		fmt.Println("No matches found.")
+
+		// It checks whether the directory to be searched exists. If it does, it prints the searched item could not be found.
+		if _, err := os.Stat(c.String(flagIn)); err != nil {
+			if os.IsNotExist(err) {
+				fmt.Printf("The directory you want to search (%v) does not exist.\n", c.String(flagIn))
+			}
+		} else {
+			fmt.Printf("The file/dir you want to find (%v) could not be found.\n", c.Args().First())
+		}
 	} else {
+		fmt.Printf("Found %d matches:\n", len(matches))
 		for _, m := range matches {
 			fmt.Println(m)
 		}
